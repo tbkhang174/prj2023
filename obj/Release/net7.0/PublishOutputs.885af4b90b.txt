@@ -1,0 +1,6 @@
+E:\publish\Prjver1.4.exe
+E:\publish\Prjver1.4.dll
+E:\publish\Prjver1.4.deps.json
+E:\publish\Prjver1.4.runtimeconfig.json
+E:\publish\Prjver1.4.pdb
+E:\publish\MySqlConnector.dll
