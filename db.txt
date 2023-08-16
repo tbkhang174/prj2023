@@ -1,0 +1,101 @@
+DROP database IF exists MangaStore;
+
+CREATE SCHEMA MangaStore;
+USE MangaStore;
+
+CREATE TABLE Staffs (
+staff_id INT NOT NULL,
+staff_name VARCHAR(50) NOT NULL,
+user_name VARCHAR(50) NOT NULL,
+password VARCHAR(50) NOT NULL,
+role_id INT NOT NULL,
+status INT NOT NULL,
+PRIMARY KEY (staff_id)
+-- FOREIGN KEY (type_id) REFERENCES comicstypes(type_id)
+);
+INSERT INTO Staffs(staff_id, staff_name, user_name, password, role_id, status) VALUES ('1', 'khangaduvjp', 'dbrr', '4297f44b13955235245b2497399d7a93', 1, 0);
+INSERT INTO Staffs(staff_id, staff_name, user_name, password, role_id, status) VALUES ('2', 'Khangaduvjp', 'dbrr2', '4297f44b13955235245b2497399d7a93', 2, 0);
+
+-- payment
+
+CREATE TABLE MangaUpdate(
+manga_update_id INT NOT NULL AUTO_INCREMENT,
+update_at DATETIME,
+update_by INT NOT NULL,
+FOREIGN KEY(update_by) REFERENCES staffs(staff_id),
+PRIMARY KEY(manga_update_id)
+);
+
+CREATE TABLE Manga_types(
+type_id INT AUTO_INCREMENT,
+type_name VARCHAR(50),
+PRIMARY KEY(type_id)
+);
+
+INSERT INTO Manga_types(type_name) values ('Shoujo');
+INSERT INTO Manga_types(type_name) values ('Comedy');
+INSERT INTO Manga_types(type_name) values ('Supernatural');
+INSERT INTO Manga_types(type_name) values ('School life');
+INSERT INTO Manga_types(type_name) values ('Suirin');
+INSERT INTO Manga_types(type_name) values ('Hentai');
+INSERT INTO Manga_types(type_name) values ('Adventure');
+INSERT INTO Manga_types(type_name) values ('Fantasy');
+
+
+CREATE TABLE Manga(
+manga_id INT NOT NULL AUTO_INCREMENT,
+quantity INT NOT NULL,
+price DECIMAL,
+manga_update_id INT,
+manga_name VARCHAR(50) NOT NULL,
+type_id INT,
+PRIMARY KEY(manga_id),
+FOREIGN KEY(manga_update_id) REFERENCES mangaupdate(manga_update_id),
+FOREIGN KEY(type_id) REFERENCES staffs(staff_id)
+);
+
+CREATE TABLE Orders (
+order_id INT auto_increment,
+payment_method VARCHAR(50) default 'Cash',
+order_status INT default '0',
+create_at DATETIME DEFAULT CURRENT_TIMESTAMP(),
+update_at DATETIME,
+update_by INT,
+create_by INT NOT NULL,
+PRIMARY KEY (order_id),
+FOREIGN KEY (create_by) REFERENCES staffs(staff_id)
+);
+
+-- CREATE TABLE OrderType(
+-- ordertype_id INT NOT NULL,
+-- mangatype_id INT NOT NULL,
+-- mangatype_quantity INT NOT NULL,
+-- PRIMARY KEY(order_id, manga_id),
+-- FOREIGN KEY(manga_id) REFERENCES manga(manga_id),
+-- FOREIGN KEY(order_id) REFERENCES orders(order_id)
+-- );
+
+CREATE TABLE OrderDetails(
+order_id INT NOT NULL,
+manga_id INT NOT NULL,
+manga_quantity INT NOT NULL,
+PRIMARY KEY(order_id, manga_id),
+FOREIGN KEY(manga_id) REFERENCES manga(manga_id),
+FOREIGN KEY(order_id) REFERENCES orders(order_id)
+);
+
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (1, 'Berserk Vol.1', 312000, 100, 1);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (2, 'Blue Lock 7', 278000, 80, 2);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (3, 'Solo Leveling, Vol. 5 (Comic)', 432000, 50, 1);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (4, 'Spy X Family, Vol. 8', 710000, 25, 2);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (5, 'Legend of Zelda : T.Princess, V.10', 236000, 75, 1);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (6, 'Berserk Deluxe Volume 3', 1900000, 10, 1);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (7, 'Soul Eater', 2750000, 30, 2);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (8, 'Alice in Borderland, Vol. 3', 476000, 40, 1);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (9, 'Tokyo Revengers (Omnibus) Vol. 3-4', 550000, 60, 2);
+INSERT INTO Manga (manga_id, Manga_Name, Price, Quantity, type_id) VALUES (10, 'Soul Eater', 2750000, 30, 2);
+
+create user if not exists 'prj1'@'localhost' identified by '4297f44b13955235245b2497399d7a93';
+GRANT ALL PRIVILEGES ON  MangaStore.* TO 'prj1'@'localhost';
+
+
